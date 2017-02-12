@@ -1,4 +1,4 @@
-/*!
+ /*!
   Copyright (c) 2016 Jed Watson.
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/react-select
@@ -78,6 +78,7 @@ const Select = React.createClass({
 		menuBuffer: React.PropTypes.number,         // optional buffer (in px) between the bottom of the viewport and the bottom of the menu
 		menuContainerStyle: React.PropTypes.object, // optional style to apply to the menu container
 		menuRenderer: React.PropTypes.func,         // renders a custom menu with options
+		menuWrapRenderer: React.PropTypes.func,			// optional function used to wrap custo components around the outer menu 
 		menuStyle: React.PropTypes.object,          // optional style to apply to the menu
 		multi: React.PropTypes.bool,                // multi-value input
 		name: React.PropTypes.string,               // generates a hidden <input /> tag with this field name for html forms
@@ -1042,7 +1043,7 @@ const Select = React.createClass({
 			return null;
 		}
 
-		return (
+		let outer = (
 			<div ref={ref => this.menuContainer = ref} className="Select-menu-outer" style={this.props.menuContainerStyle}>
 				<div ref={ref => this.menu = ref} role="listbox" className="Select-menu" id={this._instancePrefix + '-list'}
 						 style={this.props.menuStyle}
@@ -1052,6 +1053,12 @@ const Select = React.createClass({
 				</div>
 			</div>
 		);
+
+		if (this.props.menuWrapRenderer) {
+			return this.props.menuWrapRenderer(outer);
+		} else {
+			return outer;
+		}
 	},
 
 	render () {

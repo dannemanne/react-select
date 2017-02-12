@@ -3893,4 +3893,34 @@ describe('Select', () => {
 			expect(input, 'to equal', document.activeElement);
 		});
 	});
+
+	describe('with menuWrapRenderer present', () => {
+		let menuWrapRenderer = (outer) => {
+			return (
+				<div className="outerwrap">
+					<div className="outerAnchor"></div>
+					{outer}
+				</div>
+			);
+		};
+
+		beforeEach(() => {
+			let options = [
+				{ value: 'one', label: 'One' },
+				{ value: 'two', label: 'Two' },
+				{ value: 'three', label: 'Three' }
+			];
+
+			instance = createControl({
+				options: options,
+				menuWrapRenderer: menuWrapRenderer
+			});
+		});
+
+		it('wraps a container around the menu', () => {
+			clickArrowToOpen();
+			expect(ReactDOM.findDOMNode(instance), 'to contain elements matching', '.outerWrap');
+			expect(ReactDOM.findDOMNode(instance), 'queried for', '.Select-option', 'to have length', 3);
+		});
+	});
 });
