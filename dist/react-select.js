@@ -765,9 +765,9 @@ module.exports = Option;
 },{}],5:[function(require,module,exports){
 (function (global){
 /*!
-  Copyright (c) 2016 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/react-select
+ Copyright (c) 2016 Jed Watson.
+ Licensed under the MIT License (MIT), see
+ http://jedwatson.github.io/react-select
 */
 
 'use strict';
@@ -891,6 +891,7 @@ var Select = _react2['default'].createClass({
 		menuBuffer: _react2['default'].PropTypes.number, // optional buffer (in px) between the bottom of the viewport and the bottom of the menu
 		menuContainerStyle: _react2['default'].PropTypes.object, // optional style to apply to the menu container
 		menuRenderer: _react2['default'].PropTypes.func, // renders a custom menu with options
+		menuWrapRenderer: _react2['default'].PropTypes.func, // optional function used to wrap custo components around the outer menu
 		menuStyle: _react2['default'].PropTypes.object, // optional style to apply to the menu
 		multi: _react2['default'].PropTypes.bool, // multi-value input
 		name: _react2['default'].PropTypes.string, // generates a hidden <input /> tag with this field name for html forms
@@ -1173,7 +1174,7 @@ var Select = _react2['default'].createClass({
 			});
 		} else {
 			// otherwise, focus the input and open the menu
-			this._openAfterFocus = true;
+			this._openAfterFocus = this.props.openOnFocus;
 			this.focus();
 		}
 	},
@@ -1897,7 +1898,7 @@ var Select = _react2['default'].createClass({
 			return null;
 		}
 
-		return _react2['default'].createElement(
+		var outer = _react2['default'].createElement(
 			'div',
 			{ ref: function (ref) {
 					return _this7.menuContainer = ref;
@@ -1913,6 +1914,12 @@ var Select = _react2['default'].createClass({
 				menu
 			)
 		);
+
+		if (this.props.menuWrapRenderer) {
+			return this.props.menuWrapRenderer(outer);
+		} else {
+			return outer;
+		}
 	},
 
 	render: function render() {
